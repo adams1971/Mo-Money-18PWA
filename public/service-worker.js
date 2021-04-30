@@ -1,6 +1,6 @@
 const { response } = require("express");
 
-// based off unit 18 Ins-12, need to reconfig files to cache
+// based off unit 18 Ins-12, with reconfig files to cache
 const FILES_TO_CACHE = [
     "/",
     "/db.js",
@@ -26,7 +26,7 @@ self.addEventListener("install", function(evt) {
 
     self.skipWaiting()
 });
-//activater 
+//activator- activates the cache event and removes old data 
 self.addEventListener("activate", function(evt) {
     evt.waitUntil(
         caches.keys().then(keyList => {
@@ -57,7 +57,7 @@ self.addEventListener("fetch", function(evt) {
                     return response;
                 })
                 .catch(err => {
-                    return cache.match(event.request);
+                    return cache.match(evt.request);
                 });
             }).catch(err => console.log(err))
         );
