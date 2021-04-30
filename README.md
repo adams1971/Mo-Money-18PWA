@@ -20,3 +20,9 @@ This app will store user data entries using the service worker while off line. O
 - Javascriopt
 - CSS
 - Heroku 
+
+
+# Questions
+Visit my GitHub: https://github.com/adams1971
+
+Mail to: [adamscdcm@gmail.com](mailto:adamscdc@gmail.com)
