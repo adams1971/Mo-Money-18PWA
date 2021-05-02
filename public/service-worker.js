@@ -1,6 +1,5 @@
-const { response } = require("express");
+//const { response } = require("express");
 
-// based off unit 18 Ins-12, with reconfig files to cache
 const FILES_TO_CACHE = [
   "/",
   "/db.js",
@@ -20,7 +19,7 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => cache.addAll(FILES_TO_CASHE))
+      .then((cache) => cache.addAll(FILES_TO_CACHE))
       .then(self.skipWaiting())
   );
 });
@@ -33,7 +32,7 @@ self.addEventListener("activate", (event) => {
       .keys()
       .then((cacheNames) => {
         return cacheNames.filter(
-          (cacheNames) => !currentCaches.includes(cacheNames)
+          (cacheName) => !currentCaches.includes(cacheName)
         );
       })
       .then((cachesToDelete) => {
