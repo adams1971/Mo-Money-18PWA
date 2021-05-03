@@ -1,11 +1,11 @@
 const FILES_TO_CACHE = [
-  "/",
-  "db.js",
-  "index.html",
-  "index.js",
-  "manifest.webmanifest",
-  "style.css",
-  "icons/icon-192x192.png", "/icons/icon-512x512.png",
+  '/index.html',
+  '/styles.css',
+  '/index.js',
+  '/db.js',
+  '/icons/icon-192x192.png', 
+  '/icons/icon-512x512.png',
+  '/manifest.webmanifest',
 ];
 
 const CACHE_NAME = "cache-v1";
@@ -44,30 +44,60 @@ self.addEventListener("activate", (event) => {
 });
 
 //fetch
-self.addEventListener(`fetch`, (event) => {
-  if (event.request.url.includes(`/api/`)) {
+self.addEventListener("fetch", event => {
+    // non GET requests are not cached and requests to other origins are not cached
+    if (
+        event.request.method !== "GET" ||
+        !event.request.url.startsWith(self.location.origin)
+    ) {
+        event.respondWith(fetch(event.request));
+        return;
+    }
+
+
+    // use cache first for all other requests for performance
     event.respondWith(
-      caches
-        .open(RUNTIME)
-        .then((cache) =>
-          fetch(event.request)
-            .then((response) => {
-              //if valid response, clone and store to cache
-              if (response.status === 200) {
-                cache.put(event.request.url, response.clone());
-              }
-              return response;
-            })
-            //failed request- try to get from cache
-            .catch(() => cache.match(event.request))
-        )
-        .catch((err) => console.log(err))
+        caches.match(event.request).then(cachedResponse => {
+            if (cachedResponse) {
+                return cachedResponse;
+            }
+
+            // request is not in cache. make network request and cache the response
+            return caches.open(RUNTIME).then(cache => {
+                return fetch(event.request).then(response => {
+                    return cache.put(event.request, response.clone()).then(() => {
+                        return response;
+                    });
+                });
+            });
+        })
     );
-  } else {
-    event.respondWith(
-      caches
-        .match(event.request)
-        .then((response) => response || fetch(event.request))
-    );
-  }
 });
+
+// self.addEventListener(`fetch`, (event) => {
+//   if (event.request.url.includes(`/api/`)) {
+//     event.respondWith(
+//       caches
+//         .open(RUNTIME)
+//         .then((cache) =>
+//           fetch(event.request)
+//             .then((response) => {
+//               //if valid response, clone and store to cache
+//               if (response.status === 200) {
+//                 cache.put(event.request.url, response.clone());
+//               }
+//               return response;
+//             })
+//             //failed request- try to get from cache
+//             .catch(() => cache.match(event.request))
+//         )
+//         .catch((err) => console.log(err))
+//     );
+//   } else {
+//     event.respondWith(
+//       caches
+//         .match(event.request)
+//         .then((response) => response || fetch(event.request))
+//     );
+//   }
+// });
