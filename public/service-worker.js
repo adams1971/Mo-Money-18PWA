@@ -1,26 +1,23 @@
-//const { response } = require("express");
-
 const FILES_TO_CACHE = [
-  "/",
-  "/db.js",
-  "/index.html",
-  "/index.js",
-  "/manifest.webmanifest",
-  "/style.css",
-  "/icons/icon-192x192.png",
-  "/icons/icon-512x512.png",
+  // "/",
+  "db.js",
+  "index.html",
+  "index.js",
+  "manifest.webmanifest",
+  "style.css",
+  "icons/icon-192x192.png", "/icons/icon-512x512.png",
 ];
 
-const CACHE_NAME = "static-cache-v2";
+const CACHE_NAME = "cache-v1";
 const RUNTIME = "runtime";
 
 //installer
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
-      .open(CACHE_NAME)
-      .then((cache) => cache.addAll(FILES_TO_CACHE))
-      .then(self.skipWaiting())
+        .open(CACHE_NAME)
+        .then((cache) => cache.addAll(FILES_TO_CACHE))
+        .then(self.skipWaiting())
   );
 });
 
