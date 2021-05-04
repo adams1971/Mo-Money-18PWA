@@ -55,7 +55,7 @@ request.onsuccess = function (event) {
   db = event.target.result;
 
   if (navigator.onLine) {
-    console,log("Backend On Line")
+    console.log("Backend On Line")
     updatedOnLineDB();
   }
 };
